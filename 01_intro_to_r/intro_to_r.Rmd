@@ -170,7 +170,7 @@ think of them as the index that you see on the left side of a spreadsheet. In
 fact, the comparison to a spreadsheet will generally be helpful. R has stored 
 Arbuthnot's data in a kind of spreadsheet or table called a *data frame*.
 
-You can see the dimensions of this data frame as well as the names of the variables and the first few observations by typing it under `head(arbuthnot)` and then running it:
+You can see the dimensions (number of rows, the cases, and number of columns, the variables) of this data frame as well as the names of the variables and the first few observations by typing it under `head(arbuthnot)` and then running it:
 
 ```{r glimpse-data}
 glimpse(arbuthnot)
@@ -287,7 +287,7 @@ We'll be using this new vector to generate some plots, so we'll want to save it
 as a permanent column in our data frame.
 
 ```{r calc-total-bapt-vars-save}
-#Start recording in exercise 3 chuck
+# Start recording in your exercise 3 chunk from here
 arbuthnot <- arbuthnot %>%
   mutate(total = boys + girls)
 ```
@@ -361,7 +361,7 @@ Note that we are using the new `total` variable we created earlier in our calcul
 3. Now, generate a plot of the proportion of boys born over time. What do you see? 
 
 <div id="boxedtext">
-**Tip: ** If you use the up and down arrow keys, you can scroll through your 
+**Tip: ** In the console, if you use the up and down arrow keys, you can scroll through your 
 previous commands, your so-called command history. You can also access it 
 by clicking on the history tab in the upper right panel. This will save 
 you a lot of typing in the future.
@@ -403,19 +403,20 @@ data(present)
 
 The data are stored in a data frame called `present`.
 
-4.  What years are included in this data set? What are the dimensions of the 
-    data frame? What are the variable (column) names?
+4.  What years are included in this data set? *Hint:* Try `max(present$year)` to find the last 
+year instead of scrolling through the data. What are the dimensions (rows --- cases --- observations, columns --- variables) of the data frame? What are the variable (column) names? *Hint:* Try the `glimpse()` function, if you get an error, make sure you've run `library(dplyr)`. 
 
-5.  How do these counts compare to Arbuthnot's? Are they of a similar magnitude?
+5.  How do these counts of girls and boys compare to Arbuthnot's? Are they of a similar magnitude? *Hint:* Perhaps run `glimpse(arbuthnot)` again in your console to compare.
 
-6.  Make a plot that displays the proportion of boys born over time. What do you see? 
+6.  Make a plot that displays the proportion of boys born over time for the `present` data. What do you see? 
     Does Arbuthnot's observation about boys being born in greater proportion than girls 
     hold up in the U.S.? Include the plot in your response. *Hint:* You should be
-    able to reuse your code from Ex 3 above, just replace the dataframe name.
+    able to reuse your code from Ex 3 above, just replace the dataframe name. *Tip:* After updating all of
+    that Ex 3 code, you can click the little green arrow at the top of the chunk to run that whole chunk. 
 
 7.  In what year did we see the most total number of births in the U.S.? *Hint:*
-    First calculate the totals and save it as a new variable. Then, sort your
-    dataset in descending order based on the total column. You can do this
+    There are two ways to do this 1) use that `max()` function from Ex 4, `max(present$total)`, or 2) you can 
+    sort your dataset in descending order based on the total column. You can do this
     interactively in the data viewer by clicking on the arrows next to the 
     variable names. To include the sorted result in your report you will need 
     to use two new functions: `arrange` (for sorting). We can arrange the data 
