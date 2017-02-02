@@ -264,10 +264,14 @@ div.tocify {
 <li><code>ggplot2</code>: for data visualization</li>
 <li><code>oilabs</code>: for data and custom functions with the OpenIntro labs</li>
 </ul>
-<p>If these packages are not already available in your R environment, install them by typing the following three lines of code into the console of your RStudio session, pressing the enter/return key after each one. Note that you can check to see which packages (and which versions) are installed by inspecting the <em>Packages</em> tab in the lower right panel of RStudio.</p>
+<p>If these packages are not already available in your R environment, install them by typing the following lines of code into the console of your RStudio session, pressing the enter/return key after each one. Note that you can check to see which packages (and which versions) are installed by inspecting the <em>Packages</em> tab in the lower right panel of RStudio.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">install.packages</span>(<span class="st">&quot;dplyr&quot;</span>)
 <span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>)
-<span class="kw">install.packages</span>(<span class="st">&quot;oilabs&quot;</span>)</code></pre></div>
+
+<span class="co">#Installing oilabs takes a bit more code. Type the following 3 lines.</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)
+<span class="kw">library</span>(devtools)
+<span class="kw">install_github</span>(<span class="st">&quot;OpenIntroOrg/oilabs&quot;</span>)</code></pre></div>
 <p>You may need to select a server from which to download; any of them will work. Next, you need to load these packages in your working environment. We do this with the <code>library</code> function. Run the following three lines in your console.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(ggplot2)
@@ -288,18 +292,18 @@ div.tocify {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(arbuthnot)</code></pre></div>
 <p>You can do this by</p>
 <ul>
+<li>putting your cursor on this line, and hit <code>Ctrl-Enter</code>, or</li>
 <li>clicking on the green arrow at the top right of the code chunk in the R Markdown (Rmd) file, or</li>
 <li>putting your cursor on this line, and hit the <strong>Run</strong> button on the upper right corner of the pane, or</li>
-<li>hitting <code>Ctrl-Shift-Enter</code>, or</li>
 <li>typing the code in the console.</li>
 </ul>
 <p>This command instructs R to load some data: the Arbuthnot baptism counts for boys and girls. You should see that the workspace area in the upper righthand corner of the RStudio window now lists a data set called <code>arbuthnot</code> that has 82 observations on 3 variables. As you interact with R, you will create a series of objects. Sometimes you load them as we have done here, and sometimes you create them yourself as the byproduct of a computation or some analysis you have performed.</p>
-<p>The Arbuthnot data set refers to Dr. John Arbuthnot, an 18<sup>th</sup> century physician, writer, and mathematician. He was interested in the ratio of newborn boys to newborn girls, so he gathered the baptism records for children born in London for every year from 1629 to 1710. We can view the data by typing its name into the console.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbuthnot</code></pre></div>
-<p>However printing the whole dataset in the console is not that useful. One advantage of RStudio is that it comes with a built-in data viewer. Click on the name <code>arbuthnot</code> in the <em>Environment</em> pane (upper right window) that lists the objects in your workspace. This will bring up an alternative display of the data set in the <em>Data Viewer</em> (upper left window). You can close the data viewer by clicking on the <code>x</code> in the upper lefthand corner.</p>
-<p>What you should see are four columns of numbers, each row representing a different year: the first entry in each row is simply the row number (an index we can use to access the data from individual years if we want), the second is the year, and the third and fourth are the numbers of boys and girls baptized that year, respectively. Use the scrollbar on the right side of the console window to examine the complete data set.</p>
+<p>The Arbuthnot data set refers to Dr. John Arbuthnot, an 18<sup>th</sup> century physician, writer, and mathematician. He was interested in the ratio of newborn boys to newborn girls, so he gathered the baptism records for children born in London for every year from 1629 to 1710. We can view the data by typing its name into the console. However printing the whole dataset in the console is not that useful. Instead we can see the top 6 cases with the follwing command. Type the following line under <code>data(arbuthnot)</code> in your lab report by clicking <code>Enter</code> after the <code>)</code>. Then run it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(arbuthnot)</code></pre></div>
+<p>One advantage of RStudio is that it comes with a built-in data viewer. Click on the name <code>arbuthnot</code> in the <em>Environment</em> pane (upper right window) that lists the objects in your workspace. This will bring up an alternative display of the data set in the <em>Data Viewer</em> (upper left window). You can close the data viewer by clicking on the <code>x</code> in the upper lefthand corner.</p>
+<p>What you should see are four columns of numbers, each row representing a different year: the first entry in each row is simply the row number (an index we can use to access the data from individual years if we want), the second is the year, and the third and fourth are the numbers of boys and girls baptized that year, respectively. Each case is a year in this dataset. Use the scrollbar on the right side of the console window to examine the complete data set.</p>
 <p>Note that the row numbers in the first column are not part of Arbuthnot’s data. R adds them as part of its printout to help you make visual comparisons. You can think of them as the index that you see on the left side of a spreadsheet. In fact, the comparison to a spreadsheet will generally be helpful. R has stored Arbuthnot’s data in a kind of spreadsheet or table called a <em>data frame</em>.</p>
-<p>You can see the dimensions of this data frame as well as the names of the variables and the first few observations by typing:</p>
+<p>You can see the dimensions of this data frame as well as the names of the variables and the first few observations by typing it under <code>head(arbuthnot)</code> and then running it:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(arbuthnot)</code></pre></div>
 <p>This command should output the following</p>
 <pre><code>## Observations: 82
@@ -313,19 +317,22 @@ div.tocify {
 <h2>Some Exploration</h2>
 <p>Let’s start to examine the data a little more closely. We can access the data in a single column of a data frame separately using a command like</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbuthnot$boys</code></pre></div>
-<p>This command will only show the number of boys baptized each year. The dollar sign basically says “go to the data frame that comes before me, and find the variable that comes after me”.</p>
+<p>This command will only show the number of boys baptized each year. The dollar sign basically says “go to the data frame that comes before me, and find the variable that comes after me”. Type your code to answer the following question in the chunk (gray part) under <code>### Exercise 1:</code> in your lab report. Type your answer to any interpretation questions in the white part under the exercise chunk.</p>
 <ol style="list-style-type: decimal">
-<li>What command would you use to extract just the counts of girls baptized? Try it!</li>
+<li>What command would you use to extract just the counts of girls baptized? Try it! How many girls were baptized in the last year in the dataset?</li>
 </ol>
-<p>Notice that the way R has printed these data is different. When we looked at the complete data frame, we saw 82 rows, one on each line of the display. These data are no longer structured in a table with other variables, so they are displayed one right after another. Objects that print out in this way are called <em>vectors</em>; they represent a set of numbers. R has added numbers in [brackets] along the left side of the printout to indicate locations within the vector. For example, 5218 follows [1], indicating that 5218 is the first entry in the vector. And if [43] starts a line, then that would mean the first number on that line would represent the 43rd entry in the vector.</p>
+<p>Notice that the way R has printed these data is different. When we looked at the complete data frame, we saw 82 rows, one on each line of the display. These data are no longer structured in a table with other variables, so they are displayed one right after another. Objects that print out in this way are called <em>vectors</em>; they represent a set of numbers. R has added numbers in [brackets] along the left side of the printout to indicate locations within the vector. For example, 4683 follows [1], indicating that 4683 is the first entry in the vector. And if [43] starts a line, then that would mean the first number on that line would represent the 43rd entry in the vector.</p>
 <div id="data-visualization" class="section level3">
 <h3>Data visualization</h3>
 <p>R has some powerful functions for making graphics. We can create a simple plot of the number of girls baptized per year with the command</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> girls, <span class="dt">data =</span> arbuthnot)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#try typing this directly into the console and pressing enter</span>
+<span class="kw">qplot</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> girls, <span class="dt">data =</span> arbuthnot)</code></pre></div>
 <p>The <code>qplot()</code> function (meaning “quick plot”) considers the type of data you have provided it and makes the decision to visualize it with a scatterplot. The plot should appear under the <em>Plots</em> tab of the lower right panel of RStudio. Notice that the command above again looks like a function, this time with three arguments separated by commas. The first two arguments in the <code>qplot()</code> function specify the variables for the x-axis and the y-axis and the third provides the name of the data set where they can be found. If we wanted to connect the data points with lines, we could add a fourth argument to specify the geometry that we’d like.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> girls, <span class="dt">data =</span> arbuthnot, <span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#type this into the chunk under Exercise 2</span>
+<span class="kw">qplot</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> girls, <span class="dt">data =</span> arbuthnot, <span class="dt">geom =</span> <span class="st">&quot;line&quot;</span>)</code></pre></div>
 <p>You might wonder how you are supposed to know that it was possible to add that fourth argument. Thankfully, R documents all of its functions extensively. To read what a function does and learn the arguments that are available to you, just type in a question mark followed by the name of the function that you’re interested in. Try the following.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">?qplot</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#type into the console</span>
+?qplot</code></pre></div>
 <p>Notice that the help file replaces the plot in the lower right panel. You can toggle between plots and help files using the tabs at the top of that panel.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>Is there an apparent trend in the number of girls baptized over the years? How would you describe it? (To ensure that your lab report is comprehensive, be sure to include the code needed to make the plot as well as your written interpretation.)</li>
@@ -337,12 +344,13 @@ div.tocify {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">5218</span> +<span class="st"> </span><span class="dv">4683</span></code></pre></div>
 <p>to see the total number of baptisms in 1629. We could repeat this once for each year, but there is a faster way. If we add the vector for baptisms for boys to that of girls, R will compute all sums simultaneously.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbuthnot$boys +<span class="st"> </span>arbuthnot$girls</code></pre></div>
-<p>What you will see are 82 numbers (in that packed display, because we arenâ€™t looking at a data frame here), each one representing the sum weâ€™re after. Take a look at a few of them and verify that they are right.</p>
+<p>What you will see are 82 numbers (in that packed display, because we are not looking at a data frame here), each one representing the sum we are after. Take a look at a few of them and verify that they are right.</p>
 </div>
 <div id="adding-a-new-variable-to-the-data-frame" class="section level3">
 <h3>Adding a new variable to the data frame</h3>
 <p>We’ll be using this new vector to generate some plots, so we’ll want to save it as a permanent column in our data frame.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbuthnot &lt;-<span class="st"> </span>arbuthnot %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Start recording in exercise 3 chuck</span>
+arbuthnot &lt;-<span class="st"> </span>arbuthnot %&gt;%
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">total =</span> boys +<span class="st"> </span>girls)</code></pre></div>
 <p>The <code>%&gt;%</code> operator is called the <strong>piping</strong> operator. It takes the output of the previous expression and pipes it into the first argument of the function in the following one. To continue our analogy with mathematical functions, <code>x %&gt;% f(y)</code> is equivalent to <code>f(x, y)</code>.</p>
 <div id="boxedtext">
@@ -383,7 +391,8 @@ div.tocify {
 <div id="more-practice" class="section level2">
 <h2>More Practice</h2>
 <p>In the previous few pages, you recreated some of the displays and preliminary analysis of Arbuthnot’s baptism data. Your assignment involves repeating these steps, but for present day birth records in the United States. Load the present day data with the following command.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(present)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Type this into the exercise 4 chunk and begin the rest of the exercises</span>
+<span class="kw">data</span>(present)</code></pre></div>
 <p>The data are stored in a data frame called <code>present</code>.</p>
 <ol start="4" style="list-style-type: decimal">
 <li><p>What years are included in this data set? What are the dimensions of the data frame? What are the variable (column) names?</p></li>

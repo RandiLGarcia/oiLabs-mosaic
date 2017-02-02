@@ -64,7 +64,7 @@ and many others in the future, we will use the following R packages:
 - `oilabs`: for data and custom functions with the OpenIntro labs
 
 If these packages are not already available in your R environment, 
-install them by typing the following three lines of code into
+install them by typing the following lines of code into
 the console of your RStudio session, pressing the enter/return key after each one. 
 Note that you can check to see which packages (and which versions) are installed by
 inspecting the *Packages* tab in the lower right panel of RStudio. 
@@ -72,7 +72,11 @@ inspecting the *Packages* tab in the lower right panel of RStudio.
 ```{r install-packages, message = FALSE, eval=FALSE}
 install.packages("dplyr")
 install.packages("ggplot2")
-install.packages("oilabs")
+
+#Installing oilabs takes a bit more code. Type the following 3 lines.
+install.packages("devtools")
+library(devtools)
+install_github("OpenIntroOrg/oilabs")
 ```
 
 You may need to select a server from which to download; any of them will work.
@@ -118,11 +122,11 @@ data(arbuthnot)
 
 You can do this by
 
+- putting your cursor on this line, and hit `Ctrl-Enter`, or
 - clicking on the green arrow at the top right of the code chunk in the R Markdown (Rmd) 
 file, or
 - putting your cursor on this line, and hit the **Run** button on the upper right 
 corner of the pane, or
-- hitting `Ctrl-Shift-Enter`, or
 - typing the code in the console.
 
 This command instructs R to load some data: 
@@ -137,13 +141,16 @@ The Arbuthnot data set refers to Dr. John Arbuthnot, an 18<sup>th</sup> century
 physician, writer, and mathematician. He was interested in the ratio of newborn
 boys to newborn girls, so he gathered the baptism records for children born in
 London for every year from 1629 to 1710. We can view the data by 
-typing its name into the console.
+typing its name into the console. However printing the whole dataset in the console 
+is not that useful. Instead we can see the top 6 cases with the follwing command.
+Type the following line under `data(arbuthnot)` in your lab report by clicking `Enter`
+after the `)`. Then run it.
 
 ```{r view-data}
-arbuthnot
+head(arbuthnot)
 ```
 
-However printing the whole dataset in the console is not that useful. 
+ 
 One advantage of RStudio is that it comes with a built-in data viewer. Click on
 the name `arbuthnot` in the *Environment* pane (upper right window) that lists 
 the objects in your workspace. This will bring up an alternative display of the 
@@ -154,8 +161,8 @@ What you should see are four columns of numbers, each row representing a
 different year: the first entry in each row is simply the row number (an index 
 we can use to access the data from individual years if we want), the second is 
 the year, and the third and fourth are the numbers of boys and girls baptized 
-that year, respectively. Use the scrollbar on the right side of the console 
-window to examine the complete data set.
+that year, respectively. Each case is a year in this dataset. Use the scrollbar 
+on the right side of the console window to examine the complete data set.
 
 Note that the row numbers in the first column are not part of Arbuthnot's data. 
 R adds them as part of its printout to help you make visual comparisons. You can
@@ -163,7 +170,7 @@ think of them as the index that you see on the left side of a spreadsheet. In
 fact, the comparison to a spreadsheet will generally be helpful. R has stored 
 Arbuthnot's data in a kind of spreadsheet or table called a *data frame*.
 
-You can see the dimensions of this data frame as well as the names of the variables and the first few observations by typing:
+You can see the dimensions of this data frame as well as the names of the variables and the first few observations by typing it under `head(arbuthnot)` and then running it:
 
 ```{r glimpse-data}
 glimpse(arbuthnot)
@@ -191,18 +198,20 @@ arbuthnot$boys
 
 This command will only show the number of boys baptized each year. The dollar
 sign basically says "go to the data frame that comes before me, and find the 
-variable that comes after me".
+variable that comes after me". Type your code to answer the following question
+in the chunk (gray part) under `### Exercise 1:` in your lab report. Type your
+answer to any interpretation questions in the white part under the exercise chunk.
 
 1. What command would you use to extract just the counts of girls baptized? Try
-    it!
+    it! How many girls were baptized in the last year in the dataset?
     
 Notice that the way R has printed these data is different. When we looked at the
 complete data frame, we saw 82 rows, one on each line of the display. These data
 are no longer structured in a table with other variables, so they are displayed 
 one right after another. Objects that print out in this way are called *vectors*; 
 they represent a set of numbers. R has added numbers in [brackets] along the left
-side of the printout to indicate locations within the vector. For example, 5218 
-follows [1], indicating that 5218 is the first entry in the vector. And if [43] 
+side of the printout to indicate locations within the vector. For example, 4683 
+follows [1], indicating that 4683 is the first entry in the vector. And if [43] 
 starts a line, then that would mean the first number on that line would represent
 the 43rd entry in the vector.
 
@@ -213,6 +222,7 @@ R has some powerful functions for making graphics. We can create a simple plot
 of the number of girls baptized per year with the command
 
 ```{r plot-girls-vs-year}
+#try typing this directly into the console and pressing enter
 qplot(x = year, y = girls, data = arbuthnot)
 ```
 
@@ -226,6 +236,7 @@ data set where they can be found. If we wanted to connect the data points with
 lines, we could add a fourth argument to specify the geometry that we'd like.
 
 ```{r plot-girls-vs-year-line}
+#type this into the chunk under Exercise 2
 qplot(x = year, y = girls, data = arbuthnot, geom = "line")
 ```
 
@@ -236,6 +247,7 @@ just type in a question mark followed by the name of the function that you're
 interested in. Try the following.
 
 ```{r plot-help, tidy = FALSE}
+#type into the console
 ?qplot
 ```
 
@@ -265,8 +277,8 @@ that of girls, R will compute all sums simultaneously.
 arbuthnot$boys + arbuthnot$girls
 ```
 
-What you will see are 82 numbers (in that packed display, because we aren’t 
-looking at a data frame here), each one representing the sum we’re after. Take a
+What you will see are 82 numbers (in that packed display, because we are not 
+looking at a data frame here), each one representing the sum we are after. Take a
 look at a few of them and verify that they are right.
 
 ### Adding a new variable to the data frame
@@ -275,6 +287,7 @@ We'll be using this new vector to generate some plots, so we'll want to save it
 as a permanent column in our data frame.
 
 ```{r calc-total-bapt-vars-save}
+#Start recording in exercise 3 chuck
 arbuthnot <- arbuthnot %>%
   mutate(total = boys + girls)
 ```
@@ -384,6 +397,7 @@ steps, but for present day birth records in the United States. Load the
 present day data with the following command.
 
 ```{r load-present-data}
+# Type this into the exercise 4 chunk and begin the rest of the exercises
 data(present)
 ```
 
