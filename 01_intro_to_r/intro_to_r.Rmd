@@ -424,8 +424,10 @@ year instead of scrolling through the data. What are the dimensions (rows --- ca
     Sample code provided below.
     
 ```{r eval=FALSE}
-present %>%
+present <- present %>%
   arrange(desc(total))
+
+head(present)
 ```
 
 These data come from reports by the Centers for Disease Control. You can learn more about them
