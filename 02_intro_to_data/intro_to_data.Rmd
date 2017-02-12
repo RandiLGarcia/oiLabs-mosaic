@@ -69,7 +69,7 @@ data(nycflights)
 The data set `nycflights` that shows up in your workspace is a *data matrix*, 
 with each row representing an *observation* and each column representing a 
 *variable*. R calls this data format a **data frame**, which is a term that will 
-be used throughout the labs. For this data set, each *observation* is a single flight.
+be used throughout the labs. For this data set, each case, or *observation*, is a single flight.
 
 To view the names of the variables, type the command
 
@@ -350,7 +350,7 @@ qplot(x = origin, fill = dep_type, data = nycflights, geom = "bar")
 1.  Mutate the data frame so that it includes a new variable that contains the 
     average speed, `avg_speed` traveled by the plane for each flight (in mph).
     **Hint:** Average speed can be calculated as distance divided by
-    number of hours of travel, and note that `air_time` is given in minutes.
+    number of hours of travel, and note that `air_time` is given in minutes but we want miles per hour.
     
 1.  Make a scatterplot of `avg_speed` vs. `distance`. Describe the relationship
     between average speed and distance.
@@ -358,9 +358,11 @@ qplot(x = origin, fill = dep_type, data = nycflights, geom = "bar")
 
 1.  Replicate the following plot. **Hint:** The data frame plotted only
     contains flights from American Airlines, Delta Airlines, and United
-    Airlines, and the points are `color`ed by `carrier`. Once you replicate
-    the plot, determine (roughly) what the cutoff point is for departure
-    delays where you can still expect to get to your destination on time.
+    Airlines, and the points are `color`ed by `carrier`. 
+    
+<!-- Once you replicate -->
+<!--     the plot, determine (roughly) what the cutoff point is for departure -->
+<!--     delays where you can still expect to get to your destination on time. -->
 
 ```{r echo=FALSE, eval=TRUE, fig.width=7, fig.height=4}
 dl_aa_ua <- nycflights %>%

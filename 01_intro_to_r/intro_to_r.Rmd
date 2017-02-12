@@ -414,8 +414,7 @@ year instead of scrolling through the data. What are the dimensions (rows --- ca
     able to reuse your code from Ex 3 above, just replace the dataframe name. *Tip:* After updating all of
     that Ex 3 code, you can click the little green arrow at the top of the chunk to run that whole chunk. 
 
-7.  In what year did we see the most total number of births in the U.S.? *Hint:*
-    There are two ways to do this 1) use that `max()` function from Ex 4, `max(present$total)`, or 2) you can 
+7.  In what year did we see the most total number of births in the U.S.? *Hint:* You can 
     sort your dataset in descending order based on the total column. You can do this
     interactively in the data viewer by clicking on the arrows next to the 
     variable names. To include the sorted result in your report you will need 
