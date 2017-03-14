@@ -25,9 +25,20 @@ to learn about the properties of the estimate, such as its distribution.
 
 <div id="boxedtext">
 **Setting a seed:** We will take some random samples and build sampling distributions
-in this lab, which means you should set a seed on top of your lab. If this concept
-is new to you, review the lab concerning probability.
+in this lab, which means you should set a seed on top of your lab. Setting a seed will cause R to select the same 
+sample each time you knit your document. This will make sure your results don't
+change each time you knit, and it will also ensure reproducibility of your work 
+(by setting the same seed it will be possible to reproduce your results). You can
+set a seed like this:
+```{r set-seed}
+set.seed(35797)                 # make sure to change the seed
+```
+The number above is completely arbitraty. If you need inspiration, you can use your
+ID, birthday, or just a random string of numbers. The important thing is that you
+use each seed only once. Remember to do this **before** you sample in the exercise 
+above.
 </div>
+
 
 ## Getting Started
 
@@ -72,7 +83,8 @@ sales visually and with summary statistics. Let's first create a visualization,
 a histogram:
 
 ```{r area-hist}
-qplot(data = ames, x = area, binwidth = 250, geom = "histogram")
+ggplot(data = ames, aes(x = area)) +
+  geom_histogram(binwidth = 250)
 ```
 
 Let's also obtain some summary statistics. Note that we can do this using the
@@ -95,7 +107,7 @@ ames %>%
             pop_q3 = quantile(area, 0.75))  # third quartile, 75th percentile
 ```
 
-1.  Describe this population distribution using a visualization and these summary
+1.  Describe this population distribution using the visualization you just made and these summary
     statistics. You don't have to use all of the summary statistics in your 
     description, you will need to decide which ones are relevant based on the
     shape of the distribution. Make sure to include the plot and the summary
@@ -109,7 +121,7 @@ extremely costly or impossible. Because of this, we often take a sample of
 the population and use that to understand the properties of the population.
 
 If we were interested in estimating the mean living area in Ames based on a 
-sample, we can use the `sample_n` command to survey the population.
+sample, we can use the `sample_n` command to sample the population.
 
 ```{r samp1}
 samp1 <- ames %>%
@@ -145,9 +157,9 @@ though, the sample mean turns out to be a pretty good estimate of the average
 living area, and we were able to get it by sampling less than 3\% of the 
 population.
 
-1.  Would you expect the mean of your sample to match the mean of another team's 
+1.  Would you expect the mean of your sample to match the mean of another student's 
     sample? Why, or why not? If the answer is no, would you expect the means to
-    just be somewhat different or very different? Ask a neighboring team to confirm 
+    just be somewhat different or very different? Ask a neighbor to confirm 
     your answer.
 
 1.  Take a second sample, also of size 50, and call it `samp2`. How does the 
@@ -171,7 +183,8 @@ sample_means50 <- ames %>%
                     rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
                     summarise(x_bar = mean(area))
 
-qplot(data = sample_means50, x = x_bar)
+ggplot(data = sample_means50, aes(x = x_bar)) +
+  geom_histogram()
 ```
 
 Here we use R to take 15,000 different samples of size 50 from the population, calculate 
@@ -219,7 +232,8 @@ compute a sampling distribution, specifically, the sampling distribution of the
 mean home area for samples of 50 houses. 
 
 ```{r hist}
-qplot(data = sample_means50, x = x_bar, geom = "histogram")
+ggplot(data = sample_means50, aes(x = x_bar)) +
+  geom_histogram()
 ```
 
 The sampling distribution that we computed tells us much about estimating 
@@ -328,7 +342,7 @@ shinyApp(
 So far, we have only focused on estimating the mean living area in homes in 
 Ames. Now you'll try to estimate the mean home price.
 
-Note that while you might be able to answer some of these questions using the app
+Note that while you might be able to answer some of these questions using the app,
 you are expected to write the required code and produce the necessary plots and
 summary statistics. You are welcome to use the app for exploration.
 
@@ -352,7 +366,7 @@ summary statistics. You are welcome to use the app for exploration.
     size of 15. Based on this sampling distribution, what would you guess to 
     be the mean sale price of homes in Ames?
 
-1.  Of the sampling distributions from 2 and 3, which has a smaller spread?  If
+1.  Of the sampling distributions from exercise 9 and 10, which has a smaller spread?  If
     we're concerned with making estimates that are more often close to the 
     true value, would we prefer a sampling distribution with a large or small spread?
 

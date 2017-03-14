@@ -27,8 +27,7 @@ population looks like.
 
 <div id="boxedtext">
 **Setting a seed:** We will take some random samples and build sampling distributions
-in this lab, which means you should set a seed on top of your lab. If this concept
-is new to you, review the lab concerning probability.
+in this lab, which means you should set a seed on top of your lab. If you need a refresher, review the lab concerning sampling distributions.
 </div>
 
 ## Getting Started
@@ -80,9 +79,7 @@ variable `area`.
 
 1.  Describe the distribution of house area in your sample. What would you say is the
     "typical" size within your sample? Also state precisely what you interpreted 
-    "typical" to mean.
-
-1.  Would you expect another student's distribution to be identical to yours? 
+    "typical" to mean. Would you expect another student's distribution to be identical to yours? 
     Would you expect it to be similar? Why or why not?
 
 ## Confidence intervals
@@ -95,8 +92,10 @@ would be the sample mean, usually denoted as $\bar{x}$ (here we're calling it
 to also communicate how uncertain we are of that estimate. This uncertainty
 can be quantified using a **confidence interval**.
 
-A confidence interval for a population mean is of the following form
-\[ \bar{x} + z^\star \frac{s}{\sqrt{n}} \]
+A confidence interval (CI) takes the following form
+\[ \text{point estimate} \pm z_{\alpha/2}^\star \cdot SE \]
+Filling in $\bar{x}$ for our point estimate and $\frac{s}{\sqrt{n}}$ for the standard error of the mean, we get the CI for a population mean as 
+\[ \bar{x} \pm z_{\alpha/2}^\star \cdot \frac{s}{\sqrt{n}} \]
 
 You should by now be comfortable with calculating the mean and standard deviation of 
 a sample in R. And we know that the sample size is 60. So the only remaining building
@@ -112,8 +111,7 @@ We can find the critical value for a 95% confidence interal using
 z_star_95 <- qnorm(0.975)
 z_star_95
 ```
-which is roughly equal to the value critical value 1.96 that you're likely
-familiar with by now.
+which is roughly equal to 1.96. $\pm 1.96$ cut off the rejection regions in hypothesis tests assuming a normal sampling distribution and $\alpha = .05$. This number, $\pm 1.96$, will soon be very familiar to you!
 
 Let's finally calculate the confidence interval:
 ```{r ci}
@@ -125,35 +123,24 @@ samp %>%
             upper = x_bar + me)
 ```
 
-To recap: even though we don't know what the full population looks like, we're 95% 
-confident that the true average size of houses in Ames lies between the values `lower` 
-and `upper`. There are a few conditions that must be met for this interval to be valid.
+To recap: even though we don't know what the full population looks like, we now have a sense of where the true proportion might fall. There are a few conditions that must be met for this interval to be valid. For the confidence interval to be valid, the sample mean must be normally distributed and have standard error $s / \sqrt{n}$.
 
-1.  For the confidence interval to be valid, the sample mean must be normally 
-    distributed and have standard error $s / \sqrt{n}$. What conditions must be 
-    met for this to be true?
+1.  Interpret the confidence interval in the context of the problem. What does "95% confidence" mean?
 
 ## Confidence levels
 
-1.  What does "95% confidence" mean?
-
 In this case we have the rare luxury of knowing the true population mean since we 
 have data on the entire population. Let's calculate this value so that
-we can determine if our confidence intervals actually capture it. We'll store it in a
-data frame called `params` (short for population parameters), and name it `mu`.
+we can determine if our confidence intervals actually capture it. We'll store it in an object called `mu` (because we call the population mean $\mu$). 
 
 ```{r pop-mean}
-params <- ames %>%
-  summarise(mu = mean(area))
+mu <- mean(~area, data = ames)
 ```
 
 1.  Does your confidence interval capture the true average size of houses in 
-    Ames? If you are working on this lab in a classroom, does your neighbor's 
-    interval capture this value? 
+    Ames? Does your neighbor's interval capture this value? 
 
-1.  Each student should have gotten a slightly different confidence interval. What 
-    proportion of those intervals would you expect to capture the true population 
-    mean? Why?
+1.  Each student should have gotten a slightly different confidence interval. What proportion of those intervals would you expect to capture the true population mean? Why?
 
 Using R, we're going to collect many samples to learn more about how sample 
 means and confidence intervals vary from one sample to another.
@@ -165,9 +152,7 @@ Here is the rough outline:
 and store the lower and upper bounds of the confidence intervals.
 -   Repeat these steps 50 times.
 
-We can accomplish this using the `rep_sample_n` function. The following lines of 
-code takes 50 random samples of size `n` from population (and remember we defined 
-$n = 60$ earlier), and computes the upper and lower bounds of the confidence intervals based on these samples.
+We can accomplish this using the `rep_sample_n` function. The following lines of code takes 50 random samples of size `n` from the population (and remember we defined $n = 60$ earlier), and computes the upper and lower bounds of the confidence intervals based on these samples.
 
 ```{r calculate-50-cis}
 ci <- ames %>%
@@ -183,11 +168,11 @@ Let's view the first five intervals:
 
 ```{r first-five-intervals}
 ci %>%
-  slice(1:5)
+  select(lower, upper) %>%
+  head(5)
 ```
 
-Next we'll create a plot similar to Figure 4.8 on page 175 of [OpenIntro Statistics, 3rd
-Edition](https://www.openintro.org/os). The first step will be to create a new variable in 
+Next we'll create a plot similar to Figure 2.37 on page 104 of [the textbook](https://www.openintro.org/os). The first step will be to create a new variable in 
 the `ci` data frame that indicates whether the interval does or does not capture the 
 true population mean. Note that capturing this value would mean the lower bound of the
 confidence interval is below the value and upper bound of the confidence interval is
@@ -195,7 +180,7 @@ above the value. Remember that we create new variables using the `mutate` functi
 
 ```{r capture-mu}
 ci <- ci %>%
-  mutate(capture_mu = ifelse(lower < params$mu & upper > params$mu, "yes", "no"))
+  mutate(capture_mu = ifelse(lower < mu & upper > mu, "yes", "no"))
 ```
 
 The `ifelse` function is new. It takes three arguments: first is a logical statement,
@@ -209,9 +194,9 @@ to flip the coordinates of the entire plot back to the more familiar vertical
 orientation. 
 
 ```{r plot-ci}
-qplot(data = ci, x = replicate, y = x_bar, color = capture_mu) +
-  geom_errorbar(aes(ymin = lower, ymax = upper)) + 
-  geom_hline(data = params, aes(yintercept = mu), color = "darkgray") + # draw vertical line
+ggplot(data = ci, aes(x = replicate, y = x_bar, color = capture_mu)) +
+  geom_errorbar(aes(ymin = lower, ymax = upper)) +
+  geom_hline(aes(yintercept = mu), color = "darkgray") + # draw vertical line
   coord_flip()
 ```
 
