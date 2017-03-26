@@ -38,7 +38,7 @@ data in order to determine if the hot hand phenomenon appears to be real.
 
 In this lab we will explore the data using the `dplyr` package and visualize it 
 using the `ggplot2` package for data visualization. The data can be found in the
-companion package for OpenIntro labs, `oilabs`.
+companion package for OpenIntro labs, `oilabs`. We will also use the `tally()` fucntion in `mosaic`.
 
 Let's load the packages.
 
@@ -46,6 +46,7 @@ Let's load the packages.
 library(dplyr)
 library(ggplot2)
 library(oilabs)
+library(mosaic)
 ```
 
 ### Creating a reproducible lab report
@@ -96,10 +97,11 @@ in a data frame called `kobe_streak` as the `length` variable.
 kobe_streak <- calc_streak(kobe_basket$shot)
 ```
 
-We can then take a look at the distribution of these streak lengths.
+We can then take a look at the distribution of these streak lengths. We'll use a barplot instead of a histogram because streak length is a discrete random variable, not continuous.
 
 ```{r plot-streak-kobe}
-qplot(data = kobe_streak, x = length, geom = "bar")
+ggplot(data = kobe_streak, aes(length)) +
+  geom_bar()
 ```
 
 2.  Describe the distribution of Kobe's streak lengths from the 2009 NBA finals. 
@@ -132,7 +134,7 @@ the probability that he makes his second shot would go up to, let's say, 60%,
 
 \[ P(\textrm{shot 2 = H} \, | \, \textrm{shot 1 = H}) = 0.60 \]
 
-As a result of these increased probabilites, you'd expect Kobe to have longer 
+As a result of these increased probabilities, you'd expect Kobe to have longer 
 streaks. Compare this to the skeptical perspective where Kobe does *not* have a
 hot hand, where each shot is independent of the next. If he hit his first shot,
 the probability that he makes the second is still 0.45.
@@ -184,7 +186,7 @@ To view the results of this simulation, type the name of the object and then use
 
 ```{r table-sim-fair-coin}
 sim_fair_coin
-table(sim_fair_coin)
+tally(~sim_fair_coin)
 ```
 
 Since there are only two elements in `coin_outcomes`, the probability that we "flip" 
@@ -207,22 +209,14 @@ chip that says "head"" is 20%, and "tail" is 80%.
 3.  In your simulation of flipping the unfair coin 100 times, how many flips 
     came up heads? Include the code for sampling the unfair coin in your response.
     Since the markdown file will run the code, and generate a new sample each time
-    you *Knit* it, you should also "set a seed" **before** you sample. Read more 
-    about setting a seed below.
+    you *Knit* it, you should also "set a seed" **before** you sample. 
     
 <div id="boxedtext">
-**A note on setting a seed:** Setting a seed will cause R to select the same 
-sample each time you knit your document. This will make sure your results don't
-change each time you knit, and it will also ensure reproducibility of your work 
-(by setting the same seed it will be possible to reproduce your results). You can
-set a seed like this:
+Recall that you can set a seed like this:
 ```{r set-seed}
-set.seed(35797)                 # make sure to change the seed
+set.seed(35797)       
 ```
-The number above is completely arbitraty. If you need inspiration, you can use your
-ID, birthday, or just a random string of numbers. The important thing is that you
-use each seed only once. Remember to do this **before** you sample in the exercise 
-above.
+Remember to do this **before** you sample in the exercise above. Look at your knitted version to see the tally of heads and tails.
 </div>
 
 In a sense, we've shrunken the size of the slip of paper that says "heads", 
@@ -280,7 +274,7 @@ a hot hand.
 5.  Using `calc_streak`, compute the streak lengths of `sim_basket`, and
     save the results in a data frame called `sim_streak`.
 
-6.  Describe the distribution of streak lengths. What is the typical streak 
+6.  Describe the distribution of simulated streak lengths. What is the typical streak 
     length for this simulated independent shooter with a 45% shooting percentage?
     How long is the player's longest streak of baskets in 133 shots? Make sure
     to include a plot in your answer.
