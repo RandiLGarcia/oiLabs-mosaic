@@ -68,8 +68,7 @@ distribution.
 To see how accurate that description is, we can plot a normal distribution curve 
 on top of a histogram to see how closely the data follow a normal distribution. 
 This normal curve should have the same mean and standard deviation as the data. 
-We'll be working with women's heights, so let's store them as a separate object 
-and then calculate some statistics that will be referenced later. 
+We'll be working with women's heights, which we have already stored as a separate object called `fdims`. Let's calculate some statistics for the women's heights that will be referenced later. 
 
 
 ```{r female-hgt-mean-sd}
@@ -77,7 +76,7 @@ fhgtmean <- mean(~hgt, data = fdims)
 fhgtsd <- sd(~hgt, data = fdims)
 ```
 
-Next we make a density histogram to use as the backdrop and use the `lines` 
+Next we make a density histogram to use as the backdrop and use the `stat_function` 
 function to overlay a normal probability curve. The difference between a 
 frequency histogram and a density histogram is that while in a frequency 
 histogram the *heights* of the bars add up to the total number of observations, 
@@ -88,20 +87,21 @@ the histogram since the curve is a normal probability density function that also
 has area under the curve of 1. Frequency and density histograms both display the
 same exact shape; they only differ in their y-axis. You can verify this by
 comparing the frequency histogram you constructed earlier and the density
-histogram created by the commands below.
+histogram created by the commands below. To make a density histogram instead of
+a frequency histogram we add `aes(y = ..density..)` as an argument to the `geom_histogram()` function.
 
 ```{r hist-height}
-qplot(x = hgt, data = fdims, geom = "blank") +
+ggplot(data = fdims, aes(x = hgt)) + 
   geom_histogram(aes(y = ..density..)) +
-  stat_function(fun = dnorm, args = c(mean = fhgtmean, sd = fhgtsd), col = "tomato")
+  stat_function(fun = dnorm, args = c(mean = fhgtmean, sd = fhgtsd), col = "springgreen")
 ```
 
-After initializing a blank plot with the first command, the `ggplot2` package
+After initializing a blank plot with the first `ggplot()` command, the `ggplot2` package
 allows us to add additional layers. The first layer is a density histogram. The
-second layer is a statistical function -- the density of the normal curve, `dnorm`.
+second layer is a statistical function -- the density of the normal curve, `fun = dnorm`.
 We specify that we want the curve to have the same mean and standard deviation 
 as the column of female heights. The argument `col` simply sets the color for 
-the line to be drawn. If we left it out, the line would be drawn in black.
+the line to be drawn. If we left it out, the line would be drawn in black. Try picking a new color, you can check out your options [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
 
 2.  Based on the this plot, does it appear that the data follow a nearly normal 
     distribution?
@@ -116,7 +116,8 @@ constructing a normal probability plot, also called a normal Q-Q plot for
 "quantile-quantile".
 
 ```{r qq}
-qplot(sample = hgt, data = fdims, geom = "qq")
+ggplot(data = fdims, aes(sample = hgt)) +
+  geom_qq()
 ```
 
 The x-axis values correspond to the quantiles of a theoretically normal curve 
@@ -194,7 +195,7 @@ this is done in one step with the function `pnorm()`.
 Note that the function `pnorm()` gives the area under the normal curve below a 
 given value, `q`, with a given mean and standard deviation.  Since we're 
 interested in the probability that someone is taller than 182 cm, we have to 
-take one minus that probability.
+take one minus that probability *or* add `lower.tail = FALSE` as an argument in the `pnorm()` function.
 
 Assuming a normal distribution has allowed us to calculate a theoretical 
 probability.  If we want to calculate the probability empirically, we simply 
