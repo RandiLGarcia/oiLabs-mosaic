@@ -171,8 +171,8 @@ the one obtained in the previous exercise.
 8.  Conduct a hypothesis test evaluating whether the average weight gained by 
 younger mothers is different than the average weight gained by mature mothers.
 
-9.  Now, a non-inference task: Determine the age cutoff for younger and mature 
-mothers. Use a method of your choice, and explain how your method works.
+<!-- 9.  Now, a non-inference task: Determine the age cutoff for younger and mature  -->
+<!-- mothers. Use a method of your choice, and explain how your method works. -->
 
 10. Pick a pair of variables: one numerical (response) and one categorical (explanatory). 
 Come up with a research question evaluating the relationship between these variables. 

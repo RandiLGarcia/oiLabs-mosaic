@@ -2,9 +2,11 @@
 title: "Multiple linear regression"
 output:
   html_document:
-    css: ../lab.css
-    highlight: pygments
     theme: cerulean
+    highlight: pygments
+    css: ../lab.css
+    toc: true
+    toc_float: true
 ---
 
 ```{r global_options, include=FALSE}
@@ -96,18 +98,19 @@ are evaluated more favorably. Let's create a scatterplot to see if this appears
 to be the case:
 
 ```{r scatter-score-bty_avg}
-qplot(data = evals, x = bty_avg, y = score)
+ggplot(data = evals, aes(x = bty_avg, y = score)) +
+  geom_point()
 ```
 
 Before we draw conclusions about the trend, compare the number of observations 
 in the data frame with the approximate number of points on the scatterplot. 
 Is anything awry?
 
-4.  Replot the scatterplot, but this time use `geom = "jitter"`. What was
-    misleading about the initial scatterplot?
+4.  Replot the scatterplot, but this time use `geom_jitter()`. What does `geom_jitter()` do? What was misleading about the initial scatterplot?
 
 ```{r scatter-score-bty_avg-jitter}
-qplot(data = evals, x = bty_avg, y = score, geom = "jitter")
+ggplot(data = evals, aes(x = bty_avg, y = score)) +
+  geom_jitter()
 ```
 
 5.  Let's see if the apparent trend in the plot is something more than
@@ -116,10 +119,11 @@ qplot(data = evals, x = bty_avg, y = score, geom = "jitter")
     model and interpret the slope. Is average beauty score a statistically significant
     predictor? Does it appear to be a practically significant predictor?
     
-Add the line of the bet fit model to your plot using the following:
+Add the line of the best fit model to your plot using the following:
     
 ```{r scatter-score-bty_avg-line-se}
-qplot(data = evals, x = bty_avg, y = score, geom = "jitter") +
+ggplot(data = evals, aes(x = bty_avg, y = score)) +
+  geom_jitter() +
   geom_smooth(method = "lm")
 ```
 
@@ -127,13 +131,13 @@ The blue line is the model. The shaded gray area around the line tells us about 
 variability we might expect in our predictions. To turn that off, use `se = FALSE`.
 
 ```{r scatter-score-bty_avg-line}
-qplot(data = evals, x = bty_avg, y = score, geom = "jitter") +
+ggplot(data = evals, aes(x = bty_avg, y = score)) +
+  geom_jitter() +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-6.  Use residual plots to evaluate whether the conditions of least squares
-    regression are reasonable. Provide plots and comments for each one (see
-    the Simple Regression Lab for a reminder of how to make these).
+6.  Use residual plots, `plot(m_bty)`, to evaluate whether the conditions of least squares
+    regression are reasonable. Comment on each of the plots generated.
 
 ## Multiple linear regression
 
@@ -144,13 +148,14 @@ take a look at the relationship between one of these scores and the average
 beauty score.
 
 ```{r bty-rel}
-qplot(data = evals, x = bty_f1lower, y = bty_avg)
+ggplot(data = evals, aes(x = bty_f1lower, y = bty_avg)) +
+  geom_point()
+
 evals %>% 
   summarise(cor(bty_avg, bty_f1lower))
 ```
 
-As expected the relationship is quite strong---after all, the average score is 
-calculated using the individual scores. We can actually look at the 
+As expected the relationship is quite strong---after all, the average score is calculated using the individual scores. We can actually look at the 
 relationships between all beauty variables (columns 13 through 19) using the 
 following command:
 
@@ -171,6 +176,7 @@ term into the model.
 
 ```{r scatter-score-bty_avg_gender}
 m_bty_gen <- lm(score ~ bty_avg + gender, data = evals)
+
 summary(m_bty_gen)
 ```
 
@@ -193,15 +199,16 @@ the intercept and slope form familiar from simple regression.
 
 \[
   \begin{aligned}
-\widehat{score} &= \hat{\beta}_0 + \hat{\beta}_1 \times bty\_avg + \hat{\beta}_2 \times (0) \\
-&= \hat{\beta}_0 + \hat{\beta}_1 \times bty\_avg\end{aligned}
+\widehat{score} &= b_0 + b_1 \times bty\_avg + b_2 \times (0) \\
+&= b_0 + b_1 \times bty\_avg\end{aligned}
 \]
 
-<!-- We can plot this line and the line corresponding to males with the following  -->
+<!-- We can plot this line and the line corresponding to males with the following -->
 <!-- custom function. -->
 
 <!-- ```{r twoLines} -->
-<!-- qplot(data = evals, x = bty_avg, y = score, color = gender) + -->
+<!-- ggplot(data = evals, aes(x = bty_avg, y = score, color = gender)) + -->
+<!--   geom_point() + -->
 <!--   geom_smooth(method = "lm", formula = y ~ x, se = FALSE) -->
 <!-- ``` -->
 
@@ -246,6 +253,7 @@ Let's run the model...
 m_full <- lm(score ~ rank + ethnicity + gender + language + age + cls_perc_eval 
              + cls_students + cls_level + cls_profs + cls_credits + bty_avg 
              + pic_outfit + pic_color, data = evals)
+
 summary(m_full)
 ```
 
@@ -261,10 +269,10 @@ summary(m_full)
     the model.) If not, what does this say about whether or not the dropped
     variable was collinear with the other explanatory variables?
 
-15. Using backward-selection and p-value as the selection criterion,
-    determine the best model. You do not need to show all steps in your
-    answer, just the output for the final model. Also, write out the linear
-    model for predicting score based on the final model you settle on.
+<!-- 15. Using backward-selection and p-value as the selection criterion, -->
+<!--     determine the best model. You do not need to show all steps in your -->
+<!--     answer, just the output for the final model. Also, write out the linear -->
+<!--     model for predicting score based on the final model you settle on. -->
 
 16. Verify that the conditions for this model are reasonable using diagnostic 
     plots.
